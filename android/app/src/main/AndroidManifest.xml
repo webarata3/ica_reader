@@ -5,7 +5,7 @@
         android:name="android.hardware.nfc"
         android:required="true" />
    <application
-        android:label="ica_reader"
+        android:label="ICa残高照会"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
