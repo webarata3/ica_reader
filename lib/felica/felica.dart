@@ -5,12 +5,6 @@ import 'dart:typed_data';
 
 import '../model/ica.dart';
 
-class _PollingCommand {
-  final List<int> _systemCode;
-
-  _PollingCommand({required systemCode}) : _systemCode = systemCode;
-}
-
 class NfcFReader {
   static const _systemCode = [0x80, 0xEF];
   static const _serviceCode = [0x8F, 0x89];
