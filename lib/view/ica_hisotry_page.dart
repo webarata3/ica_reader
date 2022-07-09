@@ -55,9 +55,9 @@ class IcaHistoryPage extends StatelessWidget {
         ? icaRecord.dropTime
         : '${icaRecord.rideTime}-${icaRecord.dropTime}';
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Padding(
