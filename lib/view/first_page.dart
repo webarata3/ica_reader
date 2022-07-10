@@ -48,6 +48,15 @@ class _FirstPageState extends State<FirstPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('ICa残高照会'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            tooltip: '',
+            onPressed: () {
+              showLicensePage(context: context);
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: Center(
