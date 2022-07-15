@@ -46,17 +46,29 @@ class _FirstPageState extends State<FirstPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.pink,
+              ),
+              child: Text('メニュー'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.article_outlined),
+              title: const Text('OSSライセンス'),
+              onTap: () {
+                showLicensePage(context: context);
+              },
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
         title: const Text('ICa残高照会'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            tooltip: '',
-            onPressed: () {
-              showLicensePage(context: context);
-            },
-          ),
-        ],
       ),
       body: SafeArea(
         child: Center(
