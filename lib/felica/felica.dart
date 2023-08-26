@@ -24,7 +24,6 @@ class NfcFReader {
 
     for (int i = 0; i < 20; i++) {
       var readCommand = _readWithoutEncryption(idm, i);
-      print(readCommand);
       var res = await nfcf.transceive(data: readCommand);
       var ret = res.sublist(13, res.length).toList();
       var icaRecord = IcaRecord(rawData: ret);

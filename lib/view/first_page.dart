@@ -164,26 +164,16 @@ class _FirstPageState extends State<FirstPage> {
     return Expanded(
       child: ListView.builder(
         itemBuilder: (BuildContext context, int index) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: Text(
-                    '読み込み日時: ${_viewReadDate(_icaHistories![index].readDatetime)}'),
+          return Container(
+            margin: const EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 5.0),
+            padding: const EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              color: const Color.fromRGBO(255, 255, 255, 1.0),
+              border: Border.all(
+                color: const Color.fromRGBO(220, 220, 220, 1.0),
               ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(40.0, 5.0, 15.0, 5.0),
-                padding: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: const Color.fromRGBO(255, 255, 255, 1.0),
-                  border: Border.all(
-                    color: const Color.fromRGBO(220, 220, 220, 1.0),
-                  ),
-                ),
-                child: viewIcaHistory(_icaHistories![index]),
-              ),
-            ],
+            ),
+            child: viewIcaHistory(_icaHistories![index]),
           );
         },
         itemCount: _icaHistories!.length,
