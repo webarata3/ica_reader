@@ -1,6 +1,7 @@
+import 'package:ica_reader/view/view_ica_record.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../model/ica.dart';
 
@@ -38,10 +39,6 @@ class IcaHistoryPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String viewDate(DateTime date) {
-    return DateFormat('yyyy年MM月dd日', 'ja_JP').format(date);
   }
 
   Widget viewIcaRecord(IcaRecord icaRecord) {

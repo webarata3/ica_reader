@@ -1,3 +1,6 @@
+import 'package:ica_reader/model/ica_history.dart';
+import 'package:intl/intl.dart';
+
 class IcaRecord {
   final List<int> rawData;
   late DateTime date;
@@ -5,6 +8,21 @@ class IcaRecord {
   late String dropTime;
   late int diffMoney;
   late int restMoney;
+
+  IcaHistory toIcaHistory() {
+    final now = DateTime.now();
+    final readDatetime = DateFormat('yyyyMMddHHmmss').format(now);
+    final dateString = DateFormat('yyyyMMdd').format(date);
+
+    return IcaHistory(
+      readDatetime: readDatetime,
+      date: dateString,
+      rideTime: rideTime,
+      dropTime: dropTime,
+      diffMoney: diffMoney,
+      restMoney: restMoney,
+    );
+  }
 
   IcaRecord({required this.rawData}) {
     date = _parseDate(rawData.sublist(0, 2));
