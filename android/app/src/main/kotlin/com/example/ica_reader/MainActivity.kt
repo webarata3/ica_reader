@@ -1,4 +1,4 @@
-package dev.webarata3.mobile.ica_reader
+package dev.webarata3.app.ica_reader
 
 import io.flutter.embedding.android.FlutterActivity
 
