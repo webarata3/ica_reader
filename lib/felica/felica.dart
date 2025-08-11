@@ -1,7 +1,7 @@
-import 'package:nfc_manager/nfc_manager.dart';
-import 'package:nfc_manager/platform_tags.dart';
-
 import 'dart:typed_data';
+
+import 'package:nfc_manager/nfc_manager.dart';
+import 'package:nfc_manager/nfc_manager_android.dart';
 
 import '../model/ica.dart';
 
@@ -9,22 +9,23 @@ class NfcFReader {
   static const _systemCode = [0x80, 0xEF];
   static const _serviceCode = [0x8F, 0x89];
 
-  FeliCa? felica;
-
   void readTag(Future<void> Function(NfcTag tag) callback) async {
-    await NfcManager.instance.startSession(onDiscovered: callback);
+    await NfcManager.instance.startSession(
+      pollingOptions: {NfcPollingOption.iso18092},
+      onDiscovered: callback,
+    );
   }
 
-  Future<List<IcaRecord>> readICaHistory(NfcF nfcf) async {
+  Future<List<IcaRecord>> readICaHistory(NfcFAndroid nfcf) async {
     var pollingCommand = _polling(_systemCode);
-    var pollingRes = await nfcf.transceive(data: pollingCommand);
+    var pollingRes = await nfcf.transceive(pollingCommand);
     var idm = pollingRes.sublist(2, 10);
 
     var icaRecords = <IcaRecord>[];
 
     for (int i = 0; i < 20; i++) {
       var readCommand = _readWithoutEncryption(idm, i);
-      var res = await nfcf.transceive(data: readCommand);
+      var res = await nfcf.transceive(readCommand);
       var ret = res.sublist(13, res.length).toList();
       var icaRecord = IcaRecord(rawData: ret);
       icaRecords.add(icaRecord);

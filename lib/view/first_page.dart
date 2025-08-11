@@ -1,11 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:home_widget/home_widget.dart';
 import 'package:ica_reader/helper/db_helper.dart';
 import 'package:ica_reader/model/ica_history.dart';
 import 'package:ica_reader/view/view_ica_record.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:nfc_manager/nfc_manager.dart';
-import 'package:nfc_manager/platform_tags.dart';
+import 'package:nfc_manager/nfc_manager_android.dart';
 
 import '../felica/felica.dart';
 import '../model/ica.dart';
@@ -55,7 +56,7 @@ class _FirstPageState extends State<FirstPage> {
   }
 
   Future<void> readIca(NfcTag tag) async {
-    NfcF? nfcf = NfcF.from(tag);
+    NfcFAndroid? nfcf = NfcFAndroid.from(tag);
     if (nfcf != null) {
       try {
         _icaRecords = await _nfcFReader.readICaHistory(nfcf);
@@ -68,10 +69,23 @@ class _FirstPageState extends State<FirstPage> {
     await NfcManager.instance.stopSession();
     if (!mounted) return;
     if (_icaRecords == null) return;
+    _updateHomeWidget(_icaRecords![0]);
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => IcaHistoryPage(icaRecords: _icaRecords!)));
+      context,
+      MaterialPageRoute(
+        builder: (context) => IcaHistoryPage(icaRecords: _icaRecords!),
+      ),
+    );
+  }
+
+  void _updateHomeWidget(IcaRecord icaRecord) async {
+    final date = DateFormat('yyyy/MM/dd', 'ja_JP').format(icaRecord.date);
+    await HomeWidget.saveWidgetData<String>('date', date);
+    await HomeWidget.saveWidgetData<int>('balance', icaRecord.restMoney);
+    await HomeWidget.updateWidget(
+      androidName: 'HomeWidget', // Androidのウィジェット名
+      qualifiedAndroidName: 'dev.webarata3.app.ica_reader.HomeWidget',
+    );
   }
 
   @override
@@ -83,9 +97,7 @@ class _FirstPageState extends State<FirstPage> {
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.pink,
-              ),
+              decoration: BoxDecoration(color: Colors.pink),
               child: Text('メニュー'),
             ),
             ListTile(
@@ -98,9 +110,7 @@ class _FirstPageState extends State<FirstPage> {
           ],
         ),
       ),
-      appBar: AppBar(
-        title: const Text('ICa残高照会'),
-      ),
+      appBar: AppBar(title: const Text('ICa残高照会')),
       body: SafeArea(
         child: Column(
           children: [
@@ -127,10 +137,7 @@ class _FirstPageState extends State<FirstPage> {
       children: [
         const Text(
           '読み込み履歴',
-          style: TextStyle(
-            color: Colors.orange,
-            fontSize: 24,
-          ),
+          style: TextStyle(color: Colors.orange, fontSize: 24),
         ),
         const SizedBox(height: 10.0),
         _viewIcaHistoriesHead(),
@@ -146,18 +153,6 @@ class _FirstPageState extends State<FirstPage> {
       return const Text('履歴はありません。');
     }
     return _viewIcaHistoriesList();
-  }
-
-  String _viewReadDate(String readDate) {
-    int year = int.parse(readDate.substring(0, 4));
-    int month = int.parse(readDate.substring(4, 6));
-    int day = int.parse(readDate.substring(6, 8));
-    int hour = int.parse(readDate.substring(8, 10));
-    int minute = int.parse(readDate.substring(10, 12));
-
-    var datetime = DateTime(year, month, day, hour, minute);
-
-    return DateFormat('yyyy年MM月dd日 HH:mm', 'ja_JP').format(datetime);
   }
 
   Widget _viewIcaHistoriesList() {
